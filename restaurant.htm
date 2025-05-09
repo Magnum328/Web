@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GCTU Local Restaurant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Add this in your <head> section to use Animate.css for motion graphics -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+  <style>
+    :root {
+      --bg: #f4f4f4;
+      --text: #333;
+      --header-bg: linear-gradient(rgba(44,62,80,0.7), rgba(44,62,80,0.7)), url('https://i.pinimg.com/736x/21/dc/f8/21dcf89c9d3cb820d3d8622baeb721b9.jpg');
+      --nav-bg: linear-gradient(rgba(44,62,80,0.95), rgba(44,62,80,0.95));
+      --section-bg: #fff;
+      --menu-bg: #fafafa;
+      --cart-bg: #f9f9f9;
+      --primary: #e74c3c;
+      --primary-dark: #c0392b;
+      --secondary: #e67e22;
+      --badge-bg: #e74c3c;
+      --badge-text: #fff;
+    }
+    body.dark-mode {
+      --bg: #23272f;
+      --text: #f4f4f4;
+      --header-bg: linear-gradient(rgba(44,62,80,0.95), rgba(44,62,80,0.95)), url('https://i.pinimg.com/736x/21/dc/f8/21dcf89c9d3cb820d3d8622baeb721b9.jpg');
+      --nav-bg: linear-gradient(rgba(44,62,80,1), rgba(44,62,80,1));
+      --section-bg: #23272f;
+      --menu-bg: #2c313a;
+      --cart-bg: #23272f;
+      --primary: #ff5e3a;
+      --primary-dark: #c0392b;
+      --secondary: #e67e22;
+      --badge-bg: #ff5e3a;
+      --badge-text: #fff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
+      /* Add a subtle SVG pattern overlay */
+      background-image:
+        url('data:image/svg+xml;utf8,<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><g opacity="0.07"><rect x="10" y="10" width="8" height="24" rx="4" fill="%23e67e22"/><rect x="32" y="10" width="8" height="24" rx="4" fill="%23e74c3c"/><circle cx="30" cy="45" r="7" fill="%23339cff"/><rect x="24" y="2" width="12" height="8" rx="4" fill="%23c0392b"/><rect x="2" y="32" width="8" height="12" rx="4" fill="%23e67e22"/><rect x="50" y="32" width="8" height="12" rx="4" fill="%23e67e22"/></g></svg>');
+      background-repeat: repeat;
+      background-size: 120px 120px;
+    }
+    .welcome-screen {
+      height: 100vh;
+      background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(44, 62, 80, 0.8)),
+        url('https://i.pinimg.com/736x/21/dc/f8/21dcf89c9d3cb820d3d8622baeb721b9.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      flex-direction: column;
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .welcome-screen h1 {
+      font-size: 3.5rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    }
+    .welcome-screen p {
+      font-size: 1.4rem;
+      margin-bottom: 30px;
+      max-width: 700px;
+      padding: 0 20px;
+      text-align: center;
+    }
+    .welcome-screen button {
+      padding: 15px 40px;
+      background-color: var(--primary);
+      color: white;
+      font-size: 1.4rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    .welcome-screen button:hover {
+      background-color: var(--primary-dark);
+      transform: scale(1.1);
+    }
+    .enter-btn {
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .main-content {
+      display: none;
+      background-color: var(--section-bg);
+      padding: 20px;
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+    header {
+      position: relative;
+      color: #fff;
+      padding: 40px 20px 30px 20px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      z-index: 1;
+      background: var(--header-bg);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    header h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+      margin: 10px 0 0 0;
+    }
+    header img {
+      background: none;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      object-fit: contain;
+    }
+    nav {
+      background: none !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+      padding: 0 !important;
+      margin: 0 auto 18px auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 32px;
+      max-width: 540px;
+      transition: background 0.3s;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 1.2rem;
+      transition: color 0.3s, background 0.3s, padding 0.3s;
+      padding: 8px 18px;
+      border-radius: 16px;
+      background: none;
+      display: inline-block;
+    }
+    nav a:hover {
+      background: linear-gradient(
+        90deg,
+        rgba(230, 126, 34, 0.7) 60%,   /* var(--secondary) with 70% opacity */
+        rgba(231, 76, 60, 0.7) 100%    /* var(--primary) with 70% opacity */
+      );
+      color: #fff !important;
+    }
+    .section-title {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+      text-align: center;
+    }
+    .menu-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    /* Make food cards (menu-item) landscape instead of portrait */
+    .menu-item {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 500px;           /* wider card */
+      max-width: 98vw;
+      min-height: 180px;
+      padding: 18px 22px;
+      border-radius: 22px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.13);
+      margin-bottom: 28px;
+      background: var(--menu-bg);
+      transition: transform 0.3s, box-shadow 0.3s, background 0.3s, color 0.3s;
+      position: relative;
+      font-size: 1.1rem;
+    }
+
+    /* Show the food image in full, filling the height of the card */
+    .menu-item img {
+      width: 180px;
+      height: 100%;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 16px;
+      margin-right: 22px;
+      margin-bottom: 0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: block;
+    }
+
+    .menu-item h3 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .menu-item p {
+      font-size: 1.08rem;
+      color: var(--text);
+      margin-bottom: 10px;
+      text-align: left;
+    }
+
+    .menu-item span {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .menu-item > div {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .add-cart-btn {
+      align-self: center;
+      margin-top: 12px;
+      padding: 10px 30px;
+      background: linear-gradient(90deg, var(--primary) 60%, var(--secondary) 100%);
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(44,62,80,0.07);
+      display: block;
+    }
+
+    .add-cart-btn:hover {
+      background: linear-gradient(90deg, var(--secondary) 60%, var(--primary) 100%);
+      transform: scale(1.07);
+    }
+
+    /* Responsive: Stack vertically on small screens */
+    @media (max-width: 700px) {
+      .menu-item {
+        flex-direction: column;
+        align-items: stretch;
+        width: 98vw;
+        min-height: unset;
+        padding: 10px;
+        border-radius: 16px;
+      }
+      /* For mobile: image fills width and keeps aspect ratio */
+      .menu-item img {
+        width: 100%;
+        height: 160px;
+        max-height: 160px;
+        border-radius: 14px 14px 0 0;
+        margin-right: 0;
+        margin-bottom: 10px;
+        object-fit: cover;
+        display: block;
+      }
+      .menu-item > div {
+        align-items: flex-start;
+        justify-content: center;
+      }
+    }
+    body.dark-mode .menu-item {
+      background: rgba(44, 62, 80, 0.55); /* translucent dark glass */
+      box-shadow: 0 4px 24px 0 rgba(0,0,0,0.25), 0 1.5px 8px 0 rgba(0,0,0,0.10);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(255,255,255,0.08);
+    }
+    .menu-item:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    .menu-item img:hover {
+      transform: scale(1.04) rotate(-1deg);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    }
+    .cart-animate {
+      animation: cartPop 0.5s;
+    }
+    @keyframes cartPop {
+      0% { transform: scale(1);}
+      30% { transform: scale(1.2);}
+      60% { transform: scale(0.95);}
+      100% { transform: scale(1);}
+    }
+    .cart-section {
+      max-width: 500px;
+      margin: 40px auto 0 auto;
+      background: var(--cart-bg);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      padding: 25px 30px;
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    .cart-section h2 {
+      color: var(--primary);
+      margin-bottom: 18px;
+      text-align: center;
+    }
+    .cart-list {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 15px;
+    }
+    .cart-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 6px;
+    }
+    .cart-list .cart-item-name {
+      font-weight: 500;
+    }
+    .cart-list .cart-item-qty {
+      color: var(--primary);
+      margin: 0 8px;
+    }
+    .cart-total {
+      text-align: right;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    .checkout-btn {
+      width: 100%;
+      padding: 12px 0;
+      background: linear-gradient(90deg, var(--primary) 60%, var(--secondary) 100%);
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.3s;
+    }
+    .checkout-btn:hover {
+      background: linear-gradient(90deg, var(--secondary) 60%, var(--primary) 100%);
+    }
+    /* Jumia-style cart bounce/rotate animation */
+    .jumia-cart-animate {
+      animation: jumiaCartBounce 0.8s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    @keyframes jumiaCartBounce {
+      0%   { transform: scale(1) rotate(0deg);}
+      10%  { transform: scale(1.2) rotate(-10deg);}
+      20%  { transform: scale(1.1) rotate(10deg);}
+      30%  { transform: scale(1.2) rotate(-10deg);}
+      40%  { transform: scale(1.1) rotate(8deg);}
+      50%  { transform: scale(1.2) rotate(-6deg);}
+      60%  { transform: scale(1.1) rotate(4deg);}
+      70%  { transform: scale(1.15) rotate(-2deg);}
+      80%  { transform: scale(1.1) rotate(0deg);}
+      100% { transform: scale(1) rotate(0deg);}
+    }
+    /* Make cart icon in nav a bit larger for animation effect */
+    .cart-nav-icon {
+      font-size: 1.5em;
+      transition: color 0.2s;
+      vertical-align: middle;
+    }
+    .cart-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      font-size: 10px;         /* Smaller font size */
+      font-weight: bold;
+      width: 16px;
+      height: 16px;
+      line-height: 16px;       /* Center number vertically */
+      border-radius: 50%;
+      display: none;
+      pointer-events: none;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      text-align: center;
+      padding: 0;
+      transition: background 0.3s, color 0.3s;
+    }
+    /* Add a toggle button style */
+    .mode-toggle {
+      position: fixed;
+      top: 18px;
+      right: 24px;
+      z-index: 2000;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 7px 18px 7px 14px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(44,62,80,0.13);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: background 0.3s;
+    }
+    .mode-toggle:hover {
+      background: var(--primary-dark);
+    }
+    .mode-toggle i {
+      font-size: 1.1em;
+    }
+    .menu-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .menu-tab {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      background: var(--primary);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .menu-tab.active {
+      background: var(--primary-dark);
+    }
+    .menu-tab:hover {
+      background: var(--primary-dark);
+    }
+    /* Make menu and cart sections more translucent and rounded, and improve mobile look */
+    .menu-item,
+    .cart-section,
+    #faq-feedback,
+    #contact {
+      background: linear-gradient(135deg, rgba(44,62,80,0.10) 60%, rgba(231,76,60,0.08) 100%);
+      border-radius: 32px;
+      box-shadow: 0 4px 24px 0 rgba(44,62,80,0.07), 0 1.5px 8px 0 rgba(44,62,80,0.04);
+      border: none;
+    }
+
+    body.dark-mode .menu-item,
+    body.dark-mode .cart-section,
+    body.dark-mode #faq-feedback,
+    body.dark-mode #contact {
+      background: linear-gradient(135deg, rgba(44,62,80,0.28) 60%, rgba(231,76,60,0.13) 100%);
+      border-radius: 32px;
+      box-shadow: 0 4px 24px 0 rgba(0,0,0,0.13), 0 1.5px 8px 0 rgba(0,0,0,0.05);
+      border: 1.5px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(8px);
+    }
+
+    /* Responsive: Make menu items and sections smaller and more compact on mobile */
+    @media (max-width: 600px) {
+      .menu-container {
+        flex-direction: column;
+        gap: 10px;
+        padding: 0 1vw;
+      }
+      .menu-item {
+        width: 94vw;
+        max-width: 300px;
+        padding: 10px;
+        margin-bottom: 10px;
+        font-size: 0.97rem;
+        border-radius: 18px;
+      }
+      .menu-item img {
+        height: 120px;
+        border-radius: 14px 14px 0 0;
+      }
+      .cart-section,
+      #faq-feedback {
+        padding: 14px 6vw;
+        max-width: 98vw;
+        margin: 24px auto 0 auto;
+        font-size: 1rem;
+      }
+      .section-title {
+        font-size: 1.5rem;
+      }
+    }
+    #contact {
+      background: none !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    }
+
+    /* Responsive styles for mobile portrait compatibility */
+    @media (max-width: 700px) {
+      html, body {
+        font-size: 15px;
+        overflow-x: hidden;
+      }
+      .main-content {
+        padding: 8px 0;
+      }
+      header {
+        padding: 24px 6vw 18px 6vw;
+        border-radius: 0 0 24px 24px;
+      }
+      header h1 {
+        font-size: 1.5rem;
+        margin: 8px 0 0 0;
+      }
+      header img {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 6px;
+      }
+      nav {
+        gap: 10px;
+        max-width: 98vw;
+        padding: 0 !important;
+        margin: 0 auto 12px auto;
+      }
+      nav a {
+        font-size: 1rem;
+        padding: 7px 10px;
+        margin: 0 4px;
+        border-radius: 12px;
+      }
+      .section-title {
+        font-size: 1.3rem;
+        margin-bottom: 12px;
+      }
+      .menu-tabs {
+        gap: 4px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+      .menu-tab {
+        padding: 7px 12px;
+        font-size: 1rem;
+        border-radius: 12px;
+      }
+      .menu-container {
+        flex-direction: column;
+        gap: 10px;
+        padding: 0 1vw;
+      }
+      .menu-item {
+        flex-direction: column;
+        align-items: stretch;
+        width: 96vw;
+        max-width: 340px;
+        min-height: unset;
+        padding: 10px;
+        margin-bottom: 10px;
+        font-size: 1rem;
+        border-radius: 16px;
+      }
+      .menu-item img {
+        width: 100%;
+        height: 120px;
+        max-height: 120px;
+        border-radius: 14px 14px 0 0;
+        margin-right: 0;
+        margin-bottom: 10px;
+        object-fit: cover;
+        display: block;
+      }
+      .menu-item > div {
+        align-items: flex-start;
+        justify-content: center;
+      }
+      .add-cart-btn {
+        width: 100%;
+        padding: 10px 0;
+        font-size: 1rem;
+        border-radius: 20px;
+        margin-top: 10px;
+      }
+      .cart-section,
+      #faq-feedback {
+        padding: 14px 4vw;
+        max-width: 98vw;
+        margin: 18px auto 0 auto;
+        font-size: 1rem;
+        border-radius: 18px;
+      }
+      #contact {
+        padding: 10px 4vw !important;
+        max-width: 98vw !important;
+        margin: 18px auto 0 auto !important;
+        font-size: 1rem !important;
+        border-radius: 0 !important;
+      }
+      footer {
+        font-size: 0.95rem !important;
+        padding: 12px 0 8px 0 !important;
+      }
+    }
+
+    /* Add mobile-friendly animations using Animate.css classes */
+    @media (max-width: 700px) {
+      /* Animate menu cards on appearance */
+      .menu-item {
+        animation: fadeInUp 0.7s both;
+      }
+      /* Animate Add to Cart button on hover/tap */
+      .add-cart-btn:active,
+      .add-cart-btn:focus {
+        animation: bounceIn 0.5s;
+      }
+      /* Animate section titles */
+      .section-title {
+        animation: fadeInDown 0.7s both;
+      }
+      /* Animate cart section */
+      .cart-section {
+        animation: fadeIn 0.7s both;
+      }
+    }
+
+    /* Keyframes for fallback if Animate.css is not loaded */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    @keyframes fadeIn {
+      from { opacity: 0;}
+      to { opacity: 1;}
+    }
+    @keyframes bounceIn {
+      0% { transform: scale(0.9);}
+      50% { transform: scale(1.1);}
+      100% { transform: scale(1);}
+    }
+  </style>
+</head>
+<body>
+  <button class="mode-toggle" id="modeToggle" title="Toggle dark/light mode">
+    <i class="fas fa-moon"></i> Dark Mode
+  </button>
+
+<!-- Welcome Screen -->
+<div class="welcome-screen" id="welcomeScreen">
+  <div>
+    <h1>Welcome to GCTU Local Restaurant</h1>
+    <p>Experience authentic Ghanaian cuisine with our delicious menu featuring Banku, Jollof Rice, Waakye, and more!</p>
+    <button class="enter-btn" onclick="enterSite()">Enter Restaurant</button>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="main-content" id="mainContent">
+  <header>
+    <img src="https://gctusip.gctu.edu.gh/images/logo.png" alt="GCTU Logo" style="background: none;">
+    <h1>GCTU Local Restaurant</h1>
+    <nav>
+      <a href="#menu"><i class="fas fa-utensils"></i> Menu</a>
+      <a href="#cart" id="cartNav" style="position:relative;">
+        <i class="fas fa-shopping-cart cart-nav-icon" id="cartNavIcon" style="position:relative;">
+          <span class="cart-badge" id="cartBadge" style="position:absolute;top:-10px;right:-12px;min-width:20px;text-align:center;display:none;"></span>
+        </i>
+        Your Cart
+      </a>
+      <a href="#contact"><i class="fas fa-phone"></i> Contact</a>
+    </nav>
+  </header>
+
+  <section id="menu">
+    <h2 class="section-title"><i class="fas fa-utensils"></i> Our Menu</h2>
+    <div class="menu-tabs" id="menuTabs"></div>
+    <div class="menu-container" id="menuContainer"></div>
+  </section>
+
+  <section class="cart-section" id="cart">
+    <h2><i class="fas fa-shopping-cart"></i> Your Cart</h2>
+    <ul class="cart-list" id="cartList"></ul>
+    <div class="cart-total">Total: GHC <span id="cartTotal">0.00</span></div>
+    <button class="checkout-btn" onclick="checkoutCart()">Checkout</button>
+  </section>
+
+  <section id="contact" style="max-width:500px;margin:40px auto 0 auto;text-align:center;">
+    <h2><i class="fas fa-phone"></i> Contact Us</h2>
+    <p>
+      Email: <a href="mailto:alswell3208@icloud.com" style="color:var(--primary);text-decoration:none;">alswell3208@icloud.com</a><br>
+      Phone: <a href="tel:+233592474248" style="color:var(--primary);text-decoration:none;">+233 592 474 248</a>
+    </p>
+  </section>
+
+  <section id="faq-feedback" style="max-width:600px;margin:40px auto 0 auto;padding:30px 20px;background:var(--menu-bg);border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+    <h2 style="color:var(--primary);text-align:center;margin-bottom:18px;"><i class="fas fa-question-circle"></i> FAQ & Feedback</h2>
+    <details style="margin-bottom:18px;">
+      <summary style="font-weight:bold;cursor:pointer;">How do I place an order?</summary>
+      <div style="margin-top:8px;">Browse the menu, click "Add to Cart" for your favorite dishes, then click "Checkout" in your cart section.</div>
+    </details>
+    <details style="margin-bottom:18px;">
+      <summary style="font-weight:bold;cursor:pointer;">How do I contact support?</summary>
+      <div style="margin-top:8px;">Use the contact details above or send us a message using the feedback form below.</div>
+    </details>
+    <form id="feedbackForm" style="margin-top:20px;text-align:left;">
+      <label for="feedbackName" style="font-weight:500;">Your Name:</label><br>
+      <input type="text" id="feedbackName" name="name" required style="width:100%;padding:8px;margin-bottom:10px;border-radius:6px;border:1px solid #ccc;"><br>
+      <label for="feedbackEmail" style="font-weight:500;">Your Email:</label><br>
+      <input type="email" id="feedbackEmail" name="email" required style="width:100%;padding:8px;margin-bottom:10px;border-radius:6px;border:1px solid #ccc;"><br>
+      <label for="feedbackMsg" style="font-weight:500;">Message:</label><br>
+      <textarea id="feedbackMsg" name="message" rows="4" required style="width:100%;padding:8px;border-radius:6px;border:1px solid #ccc;margin-bottom:10px;"></textarea><br>
+      <button type="submit" style="background:var(--primary);color:#fff;padding:10px 30px;border:none;border-radius:30px;font-size:1.1rem;cursor:pointer;">Send Feedback</button>
+    </form>
+    <div id="feedbackStatus" style="margin-top:12px;text-align:center;"></div>
+  </section>
+</div>
+
+<script>
+  // Menu data with Unsplash images for reliability
+  const menuItems = [
+    {
+      name: "Banku and Okro Stew",
+      description: "A delicious Banku dish with a variety of greens, vegetables, and meat.",
+      price: 10.00,
+      image: "https://i.pinimg.com/736x/f3/53/35/f35335c6e9469387f4a69c4591f2c9b1.jpg"
+    },
+    {
+      name: "Jollof Rice",
+      description: "A Jollof rice dish with meat and fried plantains.",
+      price: 15.00,
+      image: "https://i.pinimg.com/736x/fc/6c/cf/fc6ccf6314f207173840e9e368cc20b0.jpg"
+    },
+    {
+      name: "Special Waakye",
+      description: "A waakye dish with fish or meat, served with egg or fried plantains.",
+      price: 25.00,
+      image: "https://i.pinimg.com/736x/16/0f/63/160f6363eaf6af760e8b24cf2e377ca3.jpg"    },
+    {
+      name: "Special Fufu",
+      description: "A fufu dish served wih meat or fish and with variety of soup.",
+      price: 35.00,
+      image: "https://i.pinimg.com/736x/d1/91/88/d19188f6dcc876c7181db2797e951b70.jpg"
+    },
+    {
+      name: "Kokonte with Groundnut Soup",
+      description: "A delicious meal served with groundnut soup.",
+      price: 38.00,
+      image: "https://i.pinimg.com/736x/d2/04/e4/d204e4b1be70ef66a990b9d8493b8e08.jpg"
+    },
+    {
+      name: "Kenkey and Fried Fish",
+      description: "Fermented corn dough dumplings served with fried fish, pepper sauce, and shito.",
+      price: 12.00,
+      image: "https://i.pinimg.com/736x/cc/ee/06/ccee064841744ad4942b2815ac824f35.jpg"
+    },
+    {
+      name: "Boiled Yam with Kontomire Stew",
+      description: "Boiled yam served with palava sauce (kontomire stew).",
+      price: 18.00,
+      image: "https://i.pinimg.com/736x/97/0d/59/970d597f8dc35a04bf66d0c1a9a46f4d.jpg"
+    },
+    {
+      name: "Tuo Zaafi",
+      description: "Northern Ghanaian staple made from maize or millet, served with ayoyo soup.",
+      price: 20.00,
+      image: "https://i.pinimg.com/736x/9e/54/97/9e549707095b9eee23cc0d2849f9fa57.jpg"
+    }
+  ];
+
+  const foodCategories = [
+    { name: "All", filter: () => true },
+    { name: "Rice", filter: item => /jollof|waakye/i.test(item.name) },
+    { name: "Swallow", filter: item => /banku|fufu|kokonte|tuo/i.test(item.name) },
+    { name: "Yam", filter: item => /yam/i.test(item.name) },
+    { name: "Kenkey", filter: item => /kenkey/i.test(item.name) },
+  ];
+
+  let currentCategory = "All";
+
+  // Render menu tabs
+  function renderMenuTabs() {
+    const menuTabs = document.getElementById('menuTabs');
+    if (!menuTabs) return;
+    menuTabs.innerHTML = '';
+    foodCategories.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'menu-tab' + (cat.name === currentCategory ? ' active' : '');
+      btn.textContent = cat.name;
+      btn.onclick = () => {
+        currentCategory = cat.name;
+        renderMenu();
+        renderMenuTabs();
+      };
+      menuTabs.appendChild(btn);
+    });
+  }
+
+  let cart = [];
+
+  // Update renderMenu to filter by category
+  function renderMenu() {
+    const menuContainer = document.getElementById('menuContainer');
+    menuContainer.innerHTML = '';
+    const catObj = foodCategories.find(c => c.name === currentCategory);
+    const items = catObj ? menuItems.filter(catObj.filter) : menuItems;
+    items.forEach((item, idx) => {
+      const menuItem = document.createElement('div');
+      menuItem.className = 'menu-item animate__animated animate__fadeInUp'; // Animate.css classes
+      menuItem.innerHTML = `
+        <img src="${item.image}" alt="${item.name}">
+        <div>
+          <h3>${item.name}</h3>
+          <p>${item.description}</p>
+          <span>GHC ${item.price.toFixed(2)}</span>
+          <button class="add-cart-btn" onclick="addToCart(${menuItems.indexOf(item)}, this)">Add to Cart</button>
+        </div>
+      `;
+      menuContainer.appendChild(menuItem);
+    });
+  }
+
+  function animateCartNavIcon() {
+    const cartNavIcon = document.getElementById('cartNavIcon');
+    if (cartNavIcon) {
+      cartNavIcon.classList.remove('jumia-cart-animate');
+      void cartNavIcon.offsetWidth; // force reflow
+      cartNavIcon.classList.add('jumia-cart-animate');
+    }
+  }
+
+  function addToCart(idx, btn) {
+    // Animation for button
+    btn.classList.remove('cart-animate');
+    void btn.offsetWidth;
+    btn.classList.add('cart-animate');
+
+    // Jumia-style animation for top cart icon
+    animateCartNavIcon();
+
+    // Add to cart logic
+    const item = menuItems[idx];
+    const found = cart.find(ci => ci.name === item.name);
+    if (found) {
+      found.qty += 1;
+    } else {
+      cart.push({ ...item, qty: 1 });
+    }
+    renderCart();
+  }
+
+  function renderCart() {
+    const cartList = document.getElementById('cartList');
+    const cartTotal = document.getElementById('cartTotal');
+    const cartBadge = document.getElementById('cartBadge');
+    cartList.innerHTML = '';
+    let total = 0;
+    let itemCount = 0;
+    cart.forEach((item, idx) => {
+      total += item.price * item.qty;
+      itemCount += item.qty;
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <span class="cart-item-name">${item.name}</span>
+        <span class="cart-item-qty">x${item.qty}</span>
+        <span>GHC ${(item.price * item.qty).toFixed(2)}</span>
+        <button onclick="removeFromCart(${idx})" style="background:none;border:none;color:var(--primary);cursor:pointer;font-size:1.1em;">&times;</button>
+      `;
+      cartList.appendChild(li);
+    });
+    cartTotal.textContent = total.toFixed(2);
+
+    // Update cart badge
+    if (cartBadge) {
+      if (itemCount > 0) {
+        cartBadge.textContent = itemCount;
+        cartBadge.style.display = 'inline-block';
+      } else {
+        cartBadge.style.display = 'none';
+      }
+    }
+  }
+
+  function removeFromCart(idx) {
+    cart.splice(idx, 1);
+    renderCart();
+  }
+
+  function checkoutCart() {
+    if (cart.length === 0) {
+      alert("Your cart is empty!");
+      return;
+    }
+    alert("Thank you for your order! Your food will be ready soon.");
+    cart = [];
+    renderCart();
+  }
+
+  // Feedback form handler (uses mailto as fallback)
+  document.addEventListener('DOMContentLoaded', function() {
+    const feedbackForm = document.getElementById('feedbackForm');
+    if (feedbackForm) {
+      feedbackForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('feedbackName').value;
+        const email = document.getElementById('feedbackEmail').value;
+        const message = document.getElementById('feedbackMsg').value;
+        const mailtoLink = `mailto:alswell3208@icloud.com?subject=Restaurant Feedback from ${encodeURIComponent(name)}&body=Name: ${encodeURIComponent(name)}%0AEmail: ${encodeURIComponent(email)}%0A%0A${encodeURIComponent(message)}`;
+        window.location.href = mailtoLink;
+        document.getElementById('feedbackStatus').innerHTML = "<span style='color:green;'>Thank you for your feedback! Your email app should open now.</span>";
+        feedbackForm.reset();
+      });
+    }
+
+    // Dark mode toggle functionality
+    const modeToggle = document.getElementById('modeToggle');
+    modeToggle.addEventListener('click', function() {
+      document.body.classList.toggle('dark-mode');
+      const isDarkMode = document.body.classList.contains('dark-mode');
+      modeToggle.innerHTML = `<i class="fas fa-${isDarkMode ? 'sun' : 'moon'}"></i> ${isDarkMode ? 'Light Mode' : 'Dark Mode'}`;
+    });
+
+    renderMenuTabs();
+  });
+
+  function enterSite() {
+    document.getElementById('welcomeScreen').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'block';
+    renderMenuTabs();
+    renderMenu();
+    renderCart();
+  }
+</script>
+<footer style="text-align:center;padding:18px 0 10px 0;color:var(--primary);font-weight:600;font-size:1rem;letter-spacing:1px;">
+  &copy; ALSWELL YAW NKUM OTABIL
+</footer>
+</body>
+</html>
